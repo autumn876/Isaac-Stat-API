@@ -133,8 +133,37 @@ function StatAPI.Reset()
         end
     end
 end
+function StatAPI.GetBaseDamage()
+    for i=0, Game():GetNumPlayers()-1 do
+        local player = Game():GetPlayer(i)
+        local ReturnedCharacter
+        local utilDamage = "PlayerDamageMultiplier" .. GetPlayerIndex(player)
+        local utilFlatDamage = "PlayerDamage" .. GetPlayerIndex(player)
+        local utilTotalDamage = "PlayerTotalDamage" .. GetPlayerIndex(player)
+        for _, character in(StatAPI.CharacterMultipliers) do
+            if player:GetPlayerType() == PlayerType.character then
+                ReturnedCharacter = character
+                break
+            end
+        end
+        if not ReturnedCharacter then ReturnedCharacter = {DAMAGE_MULT=1,BASE=3.5}end
+        if not ReturnedCharacter.TAGS then 
+            StatAPI.T[utilTotalDamage]= (StatAPI.T[utilFlatDamage]+(ReturnedCharacter.BASE or 3.5))*((ReturnedCharacter.DAMAGE_MULT or 1)*(StatAPI.T[utilDamage]or 1))
+        end
+    end
+end
 
+function StatAPI:EvaluateTotalDamage(player1,cache)
+    for i=0, Game():GetNumPlayers()-1 do
+        local player = Game():GetPlayer(i)
+        player:EvaluateItems()
+        local utilFlatDamage = "PlayerDamage" .. GetPlayerIndex(player)
+        local utilDamage = "PlayerDamageMultiplier" .. GetPlayerIndex(player)
+        local utilTotalDamage = "PlayerTotalDamage" .. GetPlayerIndex(player)
+        player.Damage = StatAPI.T[utilTotalDamage]
+    end
 
+end
 
 StatAPI.ItemsWithDamage = { --oh god here it comes
     COLLECTIBLE_ABADDON = {DAMAGE=1.5},
@@ -189,3 +218,25 @@ StatAPI.ItemsWithDamageMultiplier={
     COLLECTIBLE_ALMOND_MILK={DAMAGE_MULTIPLIER=0.3,TAGS={"MILK"}},
     COLLECTIBLE_STYE={DAMAGE_MULTIPLIER=1.28,TAGS={"ONE_EYE"}},
 }
+StatAPI.CharacterMultipliers={
+    PLAYER_EVE = {DAMAGE_MULT=0.75, TAGS="SPECIAL"},
+    PLAYER_CAIN = {DAMAGE_MULT=1.2},
+    PLAYER_JUDAS = {DAMAGE_MULT=1.35},
+    PLAYER_BLACKJUDAS = {DAMAGE_MULT=2},
+    PLAYER_BLUEBABY = {DAMAGE_MULT=1.05},
+    PLAYER_AZAZEL={DAMAGE_MULT=1.5},
+    PLAYER_EDEN={TAGS="SPECIAL"},
+    PLAYER_LAZARUS2={DAMAGE_MULT=1.4},
+    PLAYER_KEEPER={DAMAGE_MULT=1.2},
+    PLAYER_THEFORGOTTEN={DAMAGE_MULT=1.5},
+    PLAYER_JACOB={BASE=2.75},
+    PLAYER_ESAU={BASE=3.75},
+    PLAYER_MAGDALENE_B={DAMAGE_MULT=0.75},
+    PLAYER_EVE_B={DAMAGE_MULT=1.2},
+    PLAYER_AZAZEL_B={DAMAGE_MULT=1.5},
+    PLAYER_EDEN_B={TAGS="SPECIAL"},
+    PLAYER_LAZARUS2_B={DAMAGE_MULT=1.5},
+    PLAYER_THELOST_B={DAMAGE_MULT=1.3},
+    PLAYER_THEFORGOTTEN_B={DAMAGE_MULT=1.5},
+}
+StatAPI:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,StatAPI.EvaluateTotalDamage,CacheFlag.CACHE_ALL)
