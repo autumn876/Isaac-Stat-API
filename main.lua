@@ -70,17 +70,21 @@
 *deadeye
 *d8
 *modded multipliers]]
+
+
+
 local itemconfig = Isaac.GetItemConfig()
 local amountOfCollectibles = itemconfig:GetCollectibles().Size-1
 StatAPI = RegisterMod("Stat API",1)
 
 StatAPI.GotMilk = false
-local function GetPlayerIndex(player)
+function GetPlayerIndex(player) --gets the player index based on the collectible seed, so it's consistent across runs as well as other various things such as multiplayer
     return tostring(player:GetCollectibleRNG(1):GetSeed())
 end
 
+StatAPI.IsCrownActive = false
 
-StatAPI.T={}
+StatAPI.T= StatAPI.T or {}
 function StatAPI.GetFlatDamage()
     for i=0, Game():GetNumPlayers()-1 do
         local player = Game():GetPlayer(i)
@@ -122,6 +126,8 @@ function StatAPI.GetDamageMultiplier()
     end
 end
 
+--EffectiveDamage = Character base * sqrt(total damage ups*1.2+1)+flat damage ups
+
 function StatAPI.Reset()
     if Game():GetFrameCount() == 1 then
         for i=0, Game():GetNumPlayers()-1 do
@@ -157,6 +163,9 @@ function StatAPI:EvaluateTotalDamage(player1,cache)
     for i=0, Game():GetNumPlayers()-1 do
         local player = Game():GetPlayer(i)
         player:EvaluateItems()
+        for _, func in pairs (StatAPI.ReimplFunctions) do
+            func()
+        end
         local utilFlatDamage = "PlayerDamage" .. GetPlayerIndex(player)
         local utilDamage = "PlayerDamageMultiplier" .. GetPlayerIndex(player)
         local utilTotalDamage = "PlayerTotalDamage" .. GetPlayerIndex(player)
@@ -175,6 +184,7 @@ StatAPI.ItemsWithDamage = { --oh god here it comes
     COLLECTIBLE_CHAMPION_BELT={DAMAGE=1},
     COLLECTIBLE_CHARM_VAMPIRE={DAMAGE=0.3},
     COLLECTIBLE_CHEMICAL_PEEL={DAMAGE=2,TAGS={"ONE_EYE"}},
+    COLLECTIBLE_CRICKETS_HEAD={DAMAGE=0.5},
     COLLECTIBLE_DARK_MATTER={DAMAGE=1},
     COLLECTIBLE_DEATHS_TOUCH={DAMAGE=1.5},
     COLLECTIBLE_GODHEAD={DAMAGE=0.5}, -- a little trolling
@@ -239,4 +249,18 @@ StatAPI.CharacterMultipliers={
     PLAYER_THELOST_B={DAMAGE_MULT=1.3},
     PLAYER_THEFORGOTTEN_B={DAMAGE_MULT=1.5},
 }
+StatAPI.ReimplScripts = {
+    "stat-api.reimpl.oddmushthin",
+    "stat-api.reimpl.heartbreak",
+    "stat-api.reimpl.adrenaline",
+}
+StatAPI.ReimplFunctions={
+    StatAPI.OddMushThin,
+    StatAPI.HeartBreak,
+    StatAPI.Adrenaline,
+}
+for _, script in pairs(StatAPI.ReimplScripts) do
+    include(script)
+end
+
 StatAPI:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,StatAPI.EvaluateTotalDamage,CacheFlag.CACHE_ALL)

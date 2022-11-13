@@ -1,1 +1,68 @@
 everything
+
+reimplementation:
+    passives: 
+
+    bloody lust
+    experimental treatment
+    Libra
+    missing no
+    proptosis maybe
+    whore of bablyon
+    crown of light
+    dead eye 
+    lusty blood 
+    purity
+    adrenaline --PAIN
+    death's list -- pain 2
+    binge eater --might be terrible might not be who knows
+    blood oath --pain 3
+    heartbreak
+    Keeper's *balls* --pain 4 a new hope
+    red stew
+    redemption
+
+
+
+    actives: --I feel like this won't be terrible if I get a main function for room based shit
+    Razor blade
+    book of belial
+    the nail
+    d8 --this one might get nasty
+    dataminer
+    potato peeler --potato peeler api soon
+    void --ach! it's hurting me!
+    Berserk --oof
+    Esau Jr. --jank incoming
+    Golden Razor
+    Mega Mush --might give up on this one ngl
+    Sulfur
+
+
+    trinkets:
+    red patch
+    samson's lock
+    black feather
+    dim bulb
+    vibrant bulb
+    cracked crown --pain*1e1000
+
+    cards/runes:
+    empress
+    strength
+    devil
+    black rune
+    huge growth
+    the sun?
+    soul of judas
+    soul of samson
+
+    nightmares to code:
+    Succubus
+    hallowed ground
+    star of bethlehem
+
+    synergies:
+    Judas+book of belial+birthright+damocles gives a 1.4 multiplier fuck that
+    double brimstone = 1.2* mult
+    brimstone+ tech = 1.5* mult

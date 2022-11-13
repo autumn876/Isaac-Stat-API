@@ -1,0 +1,4 @@
+
+function StatAPI.CrownOfLight()
+
+end
