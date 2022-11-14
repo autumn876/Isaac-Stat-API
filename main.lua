@@ -145,6 +145,7 @@ function StatAPI.GetBaseDamage()
         local ReturnedCharacter
         local utilDamage = "PlayerDamageMultiplier" .. GetPlayerIndex(player)
         local utilFlatDamage = "PlayerDamage" .. GetPlayerIndex(player)
+        local utilRoomDamage = "PlayerRoomDamage" .. GetPlayerIndex(player)
         local utilTotalDamage = "PlayerTotalDamage" .. GetPlayerIndex(player)
         for _, character in(StatAPI.CharacterMultipliers) do
             if player:GetPlayerType() == PlayerType.character then
@@ -154,7 +155,7 @@ function StatAPI.GetBaseDamage()
         end
         if not ReturnedCharacter then ReturnedCharacter = {DAMAGE_MULT=1,BASE=3.5}end
         if not ReturnedCharacter.TAGS then 
-            StatAPI.T[utilTotalDamage]= (StatAPI.T[utilFlatDamage]+(ReturnedCharacter.BASE or 3.5))*((ReturnedCharacter.DAMAGE_MULT or 1)*(StatAPI.T[utilDamage]or 1))
+            StatAPI.T[utilTotalDamage]= (ReturnedCharacter.BASE or 3.5) * math.sqrt(((StatAPI.T[utilFlatDamage]+utilRoomDamage)*1.2*StatAPI.T[utilDamage])+1)
         end
     end
 end
@@ -166,6 +167,7 @@ function StatAPI:EvaluateTotalDamage(player1,cache)
         for _, func in pairs (StatAPI.ReimplFunctions) do
             func()
         end
+        StatAPI.GetBaseDamage()
         local utilFlatDamage = "PlayerDamage" .. GetPlayerIndex(player)
         local utilDamage = "PlayerDamageMultiplier" .. GetPlayerIndex(player)
         local utilTotalDamage = "PlayerTotalDamage" .. GetPlayerIndex(player)
@@ -215,6 +217,7 @@ StatAPI.ItemsWithDamage = { --oh god here it comes
     COLLECTIBLE_SAUSAGE={DAMAGE=0.5},
     COLLECTIBLE_STAPLER={DAMAGE=1,TAGS={"ONE_EYE"}},
     COLLECTIBLE_TERRA={DAMAGE=1},
+    COLLECTIBLE_IPECAC={DAMAGE=40}
 }
 StatAPI.ItemsWithDamageMultiplier={
     COLLECTIBLE_MAGIC_MUSHROOM={DAMAGE_MULTIPLIER=1.5},
@@ -253,11 +256,21 @@ StatAPI.ReimplScripts = {
     "stat-api.reimpl.oddmushthin",
     "stat-api.reimpl.heartbreak",
     "stat-api.reimpl.adrenaline",
+    "stat-api.reimpl.actives",
+    "stat-api.reimpl.CrownOfLight",
 }
 StatAPI.ReimplFunctions={
     StatAPI.OddMushThin,
     StatAPI.HeartBreak,
     StatAPI.Adrenaline,
+    StatAPI.CrownOfLight
+}
+StatAPI.RoomActives={
+    COLLECTIBLE_RAZOR_BLADE={DAMAGE=1.2},
+    COLLECTIBLE_BOOK_OF_BELIAL={DAMAGE=2},
+    COLLECTIBLE_THE_NAIL={DAMAGE=2},
+    COLLECTIBLE_GOLDEN_RAZOR={DAMAGE=1.5},
+
 }
 for _, script in pairs(StatAPI.ReimplScripts) do
     include(script)
