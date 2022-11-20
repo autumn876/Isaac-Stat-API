@@ -1,4 +1,5 @@
-function StatAPI.Adrenaline()
+local adrenal = {}
+function adrenal.Adrenaline()
     for i=0, Game():GetNumPlayers()-1 do
         local player = Game():GetPlayer(i)
         if player:HasCollectible(CollectibleType.COLLECTIBLE_ADRENALINE) then
@@ -7,3 +8,4 @@ function StatAPI.Adrenaline()
         end
     end
 end
+return adrenal

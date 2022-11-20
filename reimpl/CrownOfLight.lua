@@ -1,5 +1,5 @@
 
-function StatAPI.CrownOfLight()
+function StatAPI.CrownOfLight() --pain in the ass, unimplemented for now, I'll get it in soon-ish
     for i=0, Game():GetNumPlayers()-1 do
         local player = Game():GetPlayer(i)
         if player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) then
@@ -24,14 +24,11 @@ function StatAPI.CheckCrown()
     end
 end
 
----@param collider EntityNPC
 ---@param player EntityPlayer
-function StatAPI:ResetCrown(player,collider)
-    if collider:IsEnemy() then
-        if not player:GetEffects():HasCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) then --might have to tweak later
-            StatAPI.HasBeenHit = true
-            StatAPI.IsCrownActive = false
-        end
+function StatAPI:ResetCrown(player)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) then
+        StatAPI.HasBeenHit = true
+        StatAPI.IsCrownActive = false
     end
 end
-StatAPI:AddCallback(ModCallbacks.MC_PRE_PLAYER_COLLISION, StatAPI.ResetCrown)
+StatAPI:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, StatAPI.ResetCrown,EntityType.ENTITY_PLAYER)
